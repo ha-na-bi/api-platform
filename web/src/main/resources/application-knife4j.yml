@@ -1,0 +1,15 @@
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    tags-sorter: alpha
+#    operations-sorter: alpha
+#  api-docs:
+#    path: /v3/api-docs
+#knife4j:
+#  enable: true
+#  setting:
+#    language: zh_cn
+#    footer-custom-content: API Platform by fn @ 2024
+#    enable-footer: true
+#    enable-footer-custom: true
+#    enable-home-custom: true

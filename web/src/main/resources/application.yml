@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-platform
+  profiles:
+    include: knife4j
+  datasource:
+    url: jdbc:sqlite:d:/api-platform.db
+    driver-class-name: org.sqlite.JDBC

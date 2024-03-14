@@ -6,13 +6,15 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 /**
- * 应用信息
+ * API 接口信息表
  */
 @Data
-@TableName("app_info")
-public class AppInfo {
+@TableName("api_info")
+public class ApiInfo {
     @TableId(value = "id", type = IdType.AUTO)
     Long id;
+
+    Long appId;
 
     String code;
 
@@ -20,9 +22,17 @@ public class AppInfo {
 
     String url;
 
-    Integer status;
+    String header;
+
+    String method;
 
     String summary;
+
+    String parameter;
+
+    Integer status;
+
+    Integer timeout;
 
     @TableField(fill = FieldFill.INSERT)
     LocalDateTime createdTime;

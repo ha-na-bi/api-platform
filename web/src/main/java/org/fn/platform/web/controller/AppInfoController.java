@@ -12,8 +12,8 @@ import org.fn.platform.web.model.app.AppAddModel;
 import org.fn.platform.web.model.app.AppModel;
 import org.fn.platform.web.model.app.AppPageQuery;
 import org.fn.platform.web.model.app.AppUpdateModel;
+import org.fn.platform.web.model.core.CResult;
 import org.fn.platform.web.service.AppInfoService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,49 +27,44 @@ public class AppInfoController {
 
     @PostMapping("add")
     @ApiOperationSupport(order = 11)
-    public ResponseEntity<AppModel> add(@Valid @RequestBody AppAddModel model) {
+    public CResult<AppModel> add(@Valid @RequestBody AppAddModel model) {
         AppInfo appInfo = model.toAppInfo();
         appInfoService.save(appInfo);
 
-        return ResponseEntity.ok(AppModel.from(appInfo));
+        return CResult.ok(AppModel.from(appInfo));
     }
 
     @DeleteMapping("delete/{id}")
     @Parameter(name = "id", description = "应用标识", required = true)
     @ApiOperationSupport(order = 21)
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public CResult<Boolean> delete(@PathVariable Long id) {
         if (appInfoService.getById(id) == null) {
-            return ResponseEntity.notFound().build();
+            return CResult.notFound();
         }
 
-        appInfoService.removeById(id);
-
-        return ResponseEntity.ok().build();
+        return CResult.ok(appInfoService.removeById(id));
     }
 
     @PutMapping("update")
     @ApiOperationSupport(order = 31)
-    public ResponseEntity<AppModel> update(@Valid @RequestBody AppUpdateModel model) {
+    public CResult<Boolean> update(@Valid @RequestBody AppUpdateModel model) {
         if (appInfoService.getById(model.getId()) == null) {
-            return ResponseEntity.notFound().build();
+            return CResult.notFound();
         }
-        
-        AppInfo appInfo = model.toAppInfo();
-        appInfoService.updateById(appInfo);
 
-        return ResponseEntity.ok(AppModel.from(appInfo));
+        return CResult.ok(appInfoService.updateById(model.toAppInfo()));
     }
 
     @GetMapping("get/{id}")
     @ApiOperationSupport(order = 41)
     @Parameter(name = "id", description = "应用标识", required = true)
-    public ResponseEntity<AppModel> get(@PathVariable Long id) {
+    public CResult<AppModel> get(@PathVariable Long id) {
         AppInfo appInfo = appInfoService.getById(id);
         if (appInfo == null) {
-            return ResponseEntity.notFound().build();
+            return CResult.notFound();
         }
 
-        return ResponseEntity.ok(AppModel.from(appInfo));
+        return CResult.ok(AppModel.from(appInfo));
     }
 
     @GetMapping("page")
@@ -81,27 +76,20 @@ public class AppInfoController {
             @Parameter(name = "status", description = "应用的状态")
     })
     @ApiOperationSupport(order = 42)
-    public ResponseEntity<Page<AppModel>> page(@RequestParam(defaultValue = "1") int page,
-                                               @RequestParam(defaultValue = "10") int size,
-                                               @RequestParam(defaultValue = "id,asc") String sort,
-                                               @RequestParam(required = false) String keyword,
-                                               @RequestParam(required = false) Integer status) {
-        AppPageQuery query = new AppPageQuery();
-        query.setPage(page);
-        query.setKeyword(keyword);
-        query.setSize(size);
-        query.setSort(sort);
-        query.setStatus(status);
-
-        return ResponseEntity.ok(appInfoService.page(query));
+    public CResult<Page<AppModel>> page(@RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "id,asc") String sort,
+                                        @RequestParam(required = false) String keyword,
+                                        @RequestParam(required = false) Integer status) {
+        return CResult.ok(appInfoService.page(new AppPageQuery(page, size, sort, keyword, status)));
     }
 
     @GetMapping("list")
     @ApiOperationSupport(order = 43)
-    public ResponseEntity<List<AppModel>> list() {
+    public CResult<List<AppModel>> list() {
         List<AppInfo> appInfoList = appInfoService.list();
         List<AppModel> appModelList = appInfoList.stream().map(AppModel::from).toList();
 
-        return ResponseEntity.ok(appModelList);
+        return CResult.ok(appModelList);
     }
 }

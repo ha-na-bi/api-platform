@@ -15,6 +15,20 @@ public class PageQuery {
     static final String SORT_DIRECTION_ASC = "asc";
     static final String SORT_DIRECTION_DESC = "desc";
 
+    public PageQuery() {
+    }
+
+    public PageQuery(int page, int size) {
+        this.page = page;
+        this.size = size;
+    }
+
+    public PageQuery(int page, int size, String sort) {
+        this.page = page;
+        this.size = size;
+        this.sort = sort;
+    }
+
     int page;
     int size;
     String sort;

@@ -14,6 +14,12 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = true)
 public class AppPageQuery extends PageQuery {
 
+    public AppPageQuery(int page, int size, String sort, String keyword, Integer status) {
+        super(page, size, sort);
+        this.keyword = keyword;
+        this.status = status;
+    }
+
     String keyword;
     Integer status;
 
@@ -25,8 +31,8 @@ public class AppPageQuery extends PageQuery {
         if (Objects.nonNull(keyword)) {
             // 关键词查询适用于编码、名称和描述的模糊检索
             queryWrapper.and(wrapper -> wrapper.like(AppInfo::getCode, keyword)
-                    .or().like(AppInfo::getName, keyword)
-                    .or().like(AppInfo::getSummary, keyword))
+                            .or().like(AppInfo::getName, keyword)
+                            .or().like(AppInfo::getSummary, keyword))
                     .or().like(AppInfo::getUrl, keyword);
         }
     }

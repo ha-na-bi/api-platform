@@ -15,12 +15,15 @@ public class AppUpdateModel {
     @NotBlank
     String url;
     String summary;
+    @NotNull
+    Integer status;
 
     public AppInfo toAppInfo() {
         AppInfo entity = new AppInfo();
         entity.setId(id);
         entity.setName(name);
         entity.setUrl(url);
+        entity.setStatus(status);
         entity.setSummary(summary);
 
         return entity;

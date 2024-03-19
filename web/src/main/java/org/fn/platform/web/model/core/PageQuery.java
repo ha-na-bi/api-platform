@@ -33,8 +33,8 @@ public class PageQuery {
     int size;
     String sort;
 
-    public Page<AppInfo> toCondition() {
-        Page<AppInfo> page = Page.of(this.page, this.size);
+    public <T> Page<T> toCondition() {
+        Page<T> page = Page.of(this.page, this.size);
 
         // col,dire;col,dire;
         if (StringUtils.isNotBlank(this.sort)) {

@@ -1,13 +1,17 @@
 package org.fn.platform.web.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.fn.platform.web.entity.ApiInfo;
 import org.fn.platform.web.model.api.ApiModel;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.fn.platform.web.model.api.ApiPageQuery;
+import org.fn.platform.web.model.core.CResult;
+import org.fn.platform.web.service.ApiInfoService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,9 +20,49 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 public class ApiInfoController {
-    @Operation(summary = "获取所有接口信息列表")
+    final ApiInfoService apiInfoService;
+
+    @DeleteMapping("delete/{id}")
+    @Parameter(name = "id", description = "应用标识", required = true)
+    @ApiOperationSupport(order = 21)
+    public CResult<Boolean> delete(@PathVariable Long id) {
+        if (apiInfoService.getById(id) == null) {
+            return CResult.notFound();
+        }
+
+        return CResult.ok(apiInfoService.removeById(id));
+    }
+
+    @GetMapping("get/{id}")
+    @ApiOperationSupport(order = 41)
+    @Parameter(name = "id", description = "接口标识", required = true)
+    public CResult<ApiModel> get(@PathVariable String id) {
+        return CResult.ok(ApiModel.from(apiInfoService.getById(id)));
+    }
+
+    @GetMapping("page")
+    @Parameters({
+            @Parameter(name = "page", description = "页数", required = true),
+            @Parameter(name = "size", description = "分页大小", required = true),
+            @Parameter(name = "sort", description = "排序"),
+            @Parameter(name = "keyword", description = "关键词查询"),
+            @Parameter(name = "status", description = "应用的状态")
+    })
+    @ApiOperationSupport(order = 42)
+    public CResult<Page<ApiModel>> page(@RequestParam(defaultValue = "1") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "id,asc") String sort,
+                                        @RequestParam(required = false) String keyword,
+                                        @RequestParam(required = false) Integer status) {
+        return CResult.ok(apiInfoService.page(new ApiPageQuery(page, size, sort, keyword, status)));
+    }
+
     @GetMapping("list")
-    public ResponseEntity<List<ApiModel>> list() {
-        return ResponseEntity.ok(null);
+    @ApiOperationSupport(order = 43)
+    public CResult<List<ApiModel>> list() {
+        List<ApiInfo> appInfoList = apiInfoService.list();
+        List<ApiModel> appModelList = appInfoList.stream().map(ApiModel::from).toList();
+
+        return CResult.ok(appModelList);
     }
 }

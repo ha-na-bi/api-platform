@@ -30,9 +30,9 @@ public class AppModel {
 
     public static Page<AppModel> from(Page<AppInfo> page) {
         Page<AppModel> pageResult = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
-        List<AppModel> appModels = page.getRecords().stream()
+        List<AppModel> appModelList = page.getRecords().stream()
                 .map(AppModel::from).toList();
-        pageResult.setRecords(appModels);
+        pageResult.setRecords(appModelList);
 
         return pageResult;
     }

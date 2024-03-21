@@ -10,6 +10,7 @@ public enum ErrorEnum {
     UNKNOWN_ERROR("UNKNOWN_ERROR", "发生未知错误。"),
     NOT_IMPLEMENTED("NOT_IMPLEMENTED", "服务器不支持当前请求所需要的某个功能。"),
     METHOD_NOT_ALLOWED("METHOD_NOT_ALLOWED", "客户端请求中的方法被禁止。"),
+    BIZ_EXCEPTION("BIZ_EXCEPTION","服务器发现了一个业务异常，请按照提示信息进行处理。"),
     BAD_REQUEST("BAD_REQUEST", "请求无效或无法被服务器理解。");
 
     private final String code;

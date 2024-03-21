@@ -1,6 +1,7 @@
 package org.fn.platform.web.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.fn.platform.web.model.core.BizException;
 import org.fn.platform.web.model.core.CResult;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,9 +33,16 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseBody
+    @ExceptionHandler(BizException.class)
+    public <T> CResult<T> handleBizException(BizException ex) {
+        log.warn("业务异常", ex);
+        return CResult.exception(ex);
+    }
+
+    @ResponseBody
     @ExceptionHandler(Exception.class)
     public <T> CResult<T> handleHttpMessageNotReadable(Exception ex) {
-        log.error("程序发生了一个未知的异常", ex);
+        log.error("未知异常", ex);
         return CResult.internalServerError(ex.getMessage());
     }
 }

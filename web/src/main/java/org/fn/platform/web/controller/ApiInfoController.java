@@ -5,10 +5,13 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fn.platform.web.entity.ApiInfo;
+import org.fn.platform.web.model.api.ApiAddModel;
 import org.fn.platform.web.model.api.ApiModel;
 import org.fn.platform.web.model.api.ApiPageQuery;
+import org.fn.platform.web.model.api.ApiUpdateModel;
 import org.fn.platform.web.model.core.CResult;
 import org.fn.platform.web.service.ApiInfoService;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,17 @@ import java.util.List;
 public class ApiInfoController {
     final ApiInfoService apiInfoService;
 
+    @PostMapping("add")
+    @ApiOperationSupport(order = 11)
+    public CResult<ApiModel> add(@Valid @RequestBody ApiAddModel model) {
+        // ApiInfo apiInfo = model.toApiInfo();
+        // apiInfoService.save(apiInfo);
+        //
+        // return CResult.ok(ApiModel.from(apiInfo));
+
+        return CResult.ok(apiInfoService.Add(model));
+    }
+
     @DeleteMapping("delete/{id}")
     @Parameter(name = "id", description = "应用标识", required = true)
     @ApiOperationSupport(order = 21)
@@ -31,6 +45,16 @@ public class ApiInfoController {
         }
 
         return CResult.ok(apiInfoService.removeById(id));
+    }
+
+    @PutMapping("update")
+    @ApiOperationSupport(order = 31)
+    public CResult<Boolean> update(@Valid @RequestBody ApiUpdateModel model) {
+        if (apiInfoService.getById(model.getId()) == null) {
+            return CResult.notFound();
+        }
+
+        return CResult.ok(apiInfoService.updateById(model.toApiInfo()));
     }
 
     @GetMapping("get/{id}")

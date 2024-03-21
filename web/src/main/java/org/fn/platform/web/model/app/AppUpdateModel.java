@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.fn.platform.web.common.Constant;
 import org.fn.platform.web.entity.AppInfo;
+import org.springframework.beans.BeanUtils;
 
 @Data
 public class AppUpdateModel {
@@ -20,11 +22,7 @@ public class AppUpdateModel {
 
     public AppInfo toAppInfo() {
         AppInfo entity = new AppInfo();
-        entity.setId(id);
-        entity.setName(name);
-        entity.setUrl(url);
-        entity.setStatus(status);
-        entity.setSummary(summary);
+        BeanUtils.copyProperties(this, entity);
 
         return entity;
     }

@@ -74,6 +74,18 @@ public class CResult<T> {
         return result;
     }
 
+    public static <T> CResult<T> exception(BizException bizException) {
+        CResult<T> result = new CResult<>();
+        result.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        result.setMessage(bizException.getMessage());
+
+        CError error = new CError(bizException.getErrorEnum());
+        result.setError(error);
+
+        return result;
+    }
+
+
     @Getter
     public static class CError {
         public CError(ErrorEnum errorEnum) {
@@ -86,4 +98,5 @@ public class CResult<T> {
         @Setter
         Map<String, String> fieldErrors;
     }
+
 }

@@ -5,18 +5,18 @@ import cn.hutool.json.JSONUtil;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.fn.platform.web.common.Constant;
 import org.fn.platform.web.entity.ApiInfo;
 import org.springframework.beans.BeanUtils;
-import org.fn.platform.web.common.Constant;
 
 import java.util.List;
 
 @Data
-public class ApiAddModel {
+public class ApiUpdateModel {
+    @NotNull
+    Long id;
     @NotNull
     Long appId;
-    @NotBlank
-    String code;
     @NotBlank
     String name;
     @NotBlank
@@ -26,12 +26,13 @@ public class ApiAddModel {
     String method;
     String summary;
     List<ApiParameter> parameter;
+    @NotNull
+    Integer status;
     Integer timeout;
 
     public ApiInfo toApiInfo() {
         ApiInfo apiInfo = new ApiInfo();
         BeanUtils.copyProperties(this, apiInfo);
-        apiInfo.setStatus(Constant.Status.ENABLED);
 
         if (CollectionUtil.isNotEmpty(this.header)) {
             apiInfo.setHeader(JSONUtil.toJsonStr(this.header));

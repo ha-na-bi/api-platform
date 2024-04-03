@@ -15,6 +15,7 @@ public class ApiParameter {
     String example;
     String defaultValue;
     String description;
+    String in;
 
     public static List<ApiParameter> from(String json) {
         if (!JSONUtil.isTypeJSONArray(json)) {

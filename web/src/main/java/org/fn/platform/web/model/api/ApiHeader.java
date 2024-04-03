@@ -10,11 +10,8 @@ import java.util.List;
 @Data
 public class ApiHeader {
     String name;
-    String type;
     boolean required;
-    String example;
     String defaultValue;
-    String description;
 
     public static List<ApiHeader> from(String json) {
         if (!JSONUtil.isTypeJSONArray(json)) {

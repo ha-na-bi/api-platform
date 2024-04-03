@@ -33,8 +33,8 @@ public class ApiInfoServerImpl extends ServiceImpl<ApiInfoMapper, ApiInfo> imple
         return ApiModel.from(appInfoPageResult);
     }
 
-    @SneakyThrows
     @Override
+    @SneakyThrows
     public ApiModel Add(ApiAddModel model) {
         AppInfo appInfo = appInfoMapper.selectById(model.getAppId());
         if (null == appInfo) {
@@ -49,5 +49,14 @@ public class ApiInfoServerImpl extends ServiceImpl<ApiInfoMapper, ApiInfo> imple
         save(apiInfo);
 
         return ApiModel.from(apiInfo);
+    }
+
+    @Override
+    @SneakyThrows
+    public void checkReference(Long id){
+        ApiInfo entity = getById(id);
+        if (entity == null) {
+            throw new BizException("要删除的接口 {} 不存在。", id);
+        }
     }
 }

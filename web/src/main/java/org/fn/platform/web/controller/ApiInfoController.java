@@ -28,11 +28,6 @@ public class ApiInfoController {
     @PostMapping("add")
     @ApiOperationSupport(order = 11)
     public CResult<ApiModel> add(@Valid @RequestBody ApiAddModel model) {
-        // ApiInfo apiInfo = model.toApiInfo();
-        // apiInfoService.save(apiInfo);
-        //
-        // return CResult.ok(ApiModel.from(apiInfo));
-
         return CResult.ok(apiInfoService.Add(model));
     }
 
@@ -40,9 +35,7 @@ public class ApiInfoController {
     @Parameter(name = "id", description = "应用标识", required = true)
     @ApiOperationSupport(order = 21)
     public CResult<Boolean> delete(@PathVariable Long id) {
-        if (apiInfoService.getById(id) == null) {
-            return CResult.notFound();
-        }
+        apiInfoService.checkReference(id);
 
         return CResult.ok(apiInfoService.removeById(id));
     }

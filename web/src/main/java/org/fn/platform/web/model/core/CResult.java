@@ -3,6 +3,8 @@ package org.fn.platform.web.model.core;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.fn.platform.web.common.BizException;
+import org.fn.platform.web.common.ErrorEnum;
 import org.springframework.http.HttpStatus;
 
 import java.util.Map;

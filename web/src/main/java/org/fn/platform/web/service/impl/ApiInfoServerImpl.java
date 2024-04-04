@@ -13,7 +13,7 @@ import org.fn.platform.web.mapper.AppInfoMapper;
 import org.fn.platform.web.model.api.ApiAddModel;
 import org.fn.platform.web.model.api.ApiModel;
 import org.fn.platform.web.model.api.ApiPageQuery;
-import org.fn.platform.web.model.core.BizException;
+import org.fn.platform.web.common.BizException;
 import org.fn.platform.web.service.ApiInfoService;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package org.fn.platform.web.model.core;
+package org.fn.platform.web.common;
 
 import lombok.Getter;
 

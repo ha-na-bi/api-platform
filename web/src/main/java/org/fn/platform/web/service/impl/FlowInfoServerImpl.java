@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.fn.platform.web.entity.FlowInfo;
 import org.fn.platform.web.mapper.FlowInfoMapper;
-import org.fn.platform.web.model.core.BizException;
+import org.fn.platform.web.common.BizException;
 import org.fn.platform.web.model.flow.FlowAddModel;
 import org.fn.platform.web.model.flow.FlowModel;
 import org.fn.platform.web.model.flow.FlowPageQuery;

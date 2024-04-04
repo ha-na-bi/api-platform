@@ -1,8 +1,9 @@
-package org.fn.platform.web.model.core;
+package org.fn.platform.web.common;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.fn.platform.web.common.ErrorEnum;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)

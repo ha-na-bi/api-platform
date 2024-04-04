@@ -28,31 +28,20 @@ public class FlowController {
     @PostMapping("add")
     @ApiOperationSupport(order = 11)
     public CResult<FlowModel> add(@Valid @RequestBody FlowAddModel model) {
-        FlowInfo entity = model.toEntity();
-        flowInfoService.save(entity);
-
-        return CResult.ok(FlowModel.from(entity));
+        return CResult.ok(flowInfoService.add(model));
     }
 
     @DeleteMapping("delete/{id}")
     @Parameter(name = "id", description = "应用标识", required = true)
     @ApiOperationSupport(order = 21)
     public CResult<Boolean> delete(@PathVariable Long id) {
-        if (flowInfoService.getById(id) == null) {
-            return CResult.notFound();
-        }
-
-        return CResult.ok(flowInfoService.removeById(id));
+        return CResult.ok(flowInfoService.delete(id));
     }
 
     @PutMapping("update")
     @ApiOperationSupport(order = 31)
     public CResult<Boolean> update(@Valid @RequestBody FlowUpdateModel model) {
-        if (flowInfoService.getById(model.getId()) == null) {
-            return CResult.notFound();
-        }
-
-        return CResult.ok(flowInfoService.updateById(model.toEntity()));
+        return CResult.ok(flowInfoService.update(model));
     }
 
     @GetMapping("get/{id}")

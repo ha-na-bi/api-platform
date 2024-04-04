@@ -1,23 +1,24 @@
-package org.fn.platform.web.model.app;
+package org.fn.platform.web.model.flow;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.fn.platform.web.common.Constant;
-import org.fn.platform.web.entity.AppInfo;
+import org.fn.platform.web.entity.FlowInfo;
 import org.springframework.beans.BeanUtils;
 
 @Data
-public class AppAddModel {
+public class FlowAddModel {
     @NotBlank
     String code;
     @NotBlank
     String name;
-    @NotBlank
-    String url;
     String summary;
+    @NotBlank
+    String data;
 
-    public AppInfo toEntity(){
-        AppInfo entity = new AppInfo();
+    public FlowInfo toEntity() {
+        FlowInfo entity = new FlowInfo();
         BeanUtils.copyProperties(this, entity);
         entity.setStatus(Constant.Status.ENABLED);
 

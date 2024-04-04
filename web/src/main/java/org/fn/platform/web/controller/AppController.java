@@ -7,54 +7,64 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.fn.platform.web.entity.ApiInfo;
-import org.fn.platform.web.model.api.ApiAddModel;
-import org.fn.platform.web.model.api.ApiModel;
-import org.fn.platform.web.model.api.ApiPageQuery;
-import org.fn.platform.web.model.api.ApiUpdateModel;
+import org.fn.platform.web.entity.AppInfo;
+import org.fn.platform.web.model.app.AppAddModel;
+import org.fn.platform.web.model.app.AppModel;
+import org.fn.platform.web.model.app.AppPageQuery;
+import org.fn.platform.web.model.app.AppUpdateModel;
 import org.fn.platform.web.model.core.CResult;
-import org.fn.platform.web.service.ApiInfoService;
+import org.fn.platform.web.service.AppInfoService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "接口信息")
-@RequestMapping("/api-info")
-@RequiredArgsConstructor
+@Tag(name = "插件管理")
 @RestController
-public class ApiInfoController {
-    final ApiInfoService apiInfoService;
+@RequestMapping("/app")
+@RequiredArgsConstructor
+public class AppController {
+    final AppInfoService appInfoService;
 
     @PostMapping("add")
     @ApiOperationSupport(order = 11)
-    public CResult<ApiModel> add(@Valid @RequestBody ApiAddModel model) {
-        return CResult.ok(apiInfoService.Add(model));
+    public CResult<AppModel> add(@Valid @RequestBody AppAddModel model) {
+        AppInfo appInfo = model.toEntity();
+        appInfoService.save(appInfo);
+
+        return CResult.ok(AppModel.from(appInfo));
     }
 
     @DeleteMapping("delete/{id}")
     @Parameter(name = "id", description = "应用标识", required = true)
     @ApiOperationSupport(order = 21)
     public CResult<Boolean> delete(@PathVariable Long id) {
-        apiInfoService.checkReference(id);
+        if (appInfoService.getById(id) == null) {
+            return CResult.notFound();
+        }
 
-        return CResult.ok(apiInfoService.removeById(id));
+        return CResult.ok(appInfoService.removeById(id));
     }
 
     @PutMapping("update")
     @ApiOperationSupport(order = 31)
-    public CResult<Boolean> update(@Valid @RequestBody ApiUpdateModel model) {
-        if (apiInfoService.getById(model.getId()) == null) {
+    public CResult<Boolean> update(@Valid @RequestBody AppUpdateModel model) {
+        if (appInfoService.getById(model.getId()) == null) {
             return CResult.notFound();
         }
 
-        return CResult.ok(apiInfoService.updateById(model.toApiInfo()));
+        return CResult.ok(appInfoService.updateById(model.toEntity()));
     }
 
     @GetMapping("get/{id}")
     @ApiOperationSupport(order = 41)
-    @Parameter(name = "id", description = "接口标识", required = true)
-    public CResult<ApiModel> get(@PathVariable String id) {
-        return CResult.ok(ApiModel.from(apiInfoService.getById(id)));
+    @Parameter(name = "id", description = "应用标识", required = true)
+    public CResult<AppModel> get(@PathVariable Long id) {
+        AppInfo appInfo = appInfoService.getById(id);
+        if (appInfo == null) {
+            return CResult.notFound();
+        }
+
+        return CResult.ok(AppModel.from(appInfo));
     }
 
     @GetMapping("page")
@@ -63,22 +73,22 @@ public class ApiInfoController {
             @Parameter(name = "size", description = "分页大小", required = true),
             @Parameter(name = "sort", description = "排序"),
             @Parameter(name = "keyword", description = "关键词查询"),
-            @Parameter(name = "status", description = "应用的状态")
+            @Parameter(name = "status", description = "状态")
     })
     @ApiOperationSupport(order = 42)
-    public CResult<Page<ApiModel>> page(@RequestParam(defaultValue = "1") int page,
+    public CResult<Page<AppModel>> page(@RequestParam(defaultValue = "1") int page,
                                         @RequestParam(defaultValue = "10") int size,
                                         @RequestParam(defaultValue = "id,asc") String sort,
                                         @RequestParam(required = false) String keyword,
                                         @RequestParam(required = false) Integer status) {
-        return CResult.ok(apiInfoService.page(new ApiPageQuery(page, size, sort, keyword, status)));
+        return CResult.ok(appInfoService.page(new AppPageQuery(page, size, sort, keyword, status)));
     }
 
     @GetMapping("list")
     @ApiOperationSupport(order = 43)
-    public CResult<List<ApiModel>> list() {
-        List<ApiInfo> appInfoList = apiInfoService.list();
-        List<ApiModel> appModelList = appInfoList.stream().map(ApiModel::from).toList();
+    public CResult<List<AppModel>> list() {
+        List<AppInfo> appInfoList = appInfoService.list();
+        List<AppModel> appModelList = appInfoList.stream().map(AppModel::from).toList();
 
         return CResult.ok(appModelList);
     }

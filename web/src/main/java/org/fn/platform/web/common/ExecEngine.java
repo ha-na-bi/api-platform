@@ -23,15 +23,22 @@ public class ExecEngine {
     static final Pattern EXPRESSION_PATTERN = Pattern.compile("\\{\\{\\s*(.+?)\\s*:\\s*(.+?)\\s*\\}\\}");
 
     final FlowData flowData;
+    final String taskId;
 
     Map<String, String> response;
 
     public ExecEngine(FlowData flowData) {
         this.flowData = flowData;
+        this.taskId = flowData.getCode() + "_" + System.currentTimeMillis();
     }
 
-    public void execute() {
-        //TODO: 解析 flowData 并执行整个流程
+    public String execute() {
+        for (ApiInstance api : flowData.topologicalSort()) {
+            log.debug("Call API: {}", api.getCode());
+            execute(api);
+        }
+
+        return taskId;
     }
 
     @SneakyThrows

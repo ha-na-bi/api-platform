@@ -8,14 +8,13 @@ import java.util.*;
 @Data
 public class FlowData {
 
+    String code;
+
     List<ApiInstance> apiInstanceList = new ArrayList<>();
 
     public List<ApiInstance> topologicalSort() {
-        // 用于存储拓扑排序的结果
         List<ApiInstance> sortedList = new ArrayList<>();
-        // 初始化入度表
         Map<String, Integer> inDegree = new HashMap<>();
-        // 初始化图
         Map<String, List<String>> graph = new HashMap<>();
         for (ApiInstance instance : apiInstanceList) {
             inDegree.put(instance.getCode(), 0);
@@ -56,8 +55,7 @@ public class FlowData {
             throw new RuntimeException("存在循环依赖，无法进行拓扑排序");
         }
 
-        apiInstanceList = sortedList;
-        return sortedList;
+        return (apiInstanceList = sortedList);
     }
 
     public String toJson() {
